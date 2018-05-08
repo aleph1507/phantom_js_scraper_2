@@ -54,7 +54,7 @@ page.open(url, function(status) {
   				// return celltext;
           return celltexts;
   			});
-  			page.render('example.png');
+  			// page.render('example.png');
   			var path = 'tabela.txt';
         // var tdArray = tds.split("---novred---");
         // for(var td in tdArray){
