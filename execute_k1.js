@@ -90,7 +90,8 @@ function main() {
   let count = 0;
   var phantomExecutable = 'phantomjs';
 
-  var child = spawn(phantomExecutable, args, options);
+  if(!child)
+    var child = spawn(phantomExecutable, args, options);
 
   function Uint8ArrToString(myUint8Arr){
       // return String.fromCharCode.apply(null, myUint8Arr);
@@ -156,5 +157,7 @@ function main() {
   child.on('close', function(code) {
       console.log('Process closed with status code: ' + code);
   });
+
+  // child.kill('SIGINT');
 
 }
