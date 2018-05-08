@@ -26,15 +26,16 @@ global.emails = [];
 global.interval = 3;
 global.keywords = [];
 global.string_emails = '';
+global.mails_sent = 0;
 var first = true;
 
 fs.readFile(file_emails, 'utf8', function(err, data){
   if(err)
     throw err;
-  this.emails = data.split(',');
-  for(let i = 0; i<this.emails.length; i++){
-    this.string_emails += this.emails[i];
-    if(i<this.emails.length - 1)
+  global.emails = data.split(',');
+  for(let i = 0; i<global.emails.length; i++){
+    global.string_emails += global.emails[i];
+    if(i<global.emails.length - 1)
       global.string_emails += ', ';
   }
   // console.log("EMAILS: " + this.string_emails);
@@ -49,7 +50,7 @@ fs.readFile(file_settings, 'utf8', function(err, data){
   var settings = data.split(',');
   interval = settings[0];
   for(let i = 1; i<settings.length; i++)
-    keywords.push(settings[i].trim());
+    keywords.push(settings[i].trim().toLowerCase());
 });
 
 setInterval(() => {
@@ -62,7 +63,7 @@ console.log(interval);
 
 function main() {
   // var fs = require('fs');
-  // console.log("vo main, interval: " + interval);
+  console.log("vo main, interval: " + interval);
   var spawn = require('child_process').spawn;
   var args = ["./k1.js"];
 
@@ -152,7 +153,7 @@ function main() {
         for(let i = 0; i<dataArr.length; i++)
         {
           for(let j = 0; j<keywords.length; j++){
-            if(dataArr[i].indexOf(keywords[j]) != -1){
+            if(dataArr[i].toLowerCase().indexOf(keywords[j]) != -1){
               for(let k = 0; k<read.length; k++){
                 if(read[k] == dataArr[i])
                   send = false;
@@ -178,10 +179,13 @@ function main() {
                   text: mailText
                 };
 
+                console.log('MAILS_SENT : ' + global.mails_sent);
+
                 transporter.sendMail(mailOptions, function(error, info){
                   if (error) {
                     console.log(error);
                   } else {
+                    globals.mails_sent++;
                     console.log('Email sent: ' + info.response);
                   }
                 });
